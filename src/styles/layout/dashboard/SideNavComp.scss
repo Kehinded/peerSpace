@@ -78,6 +78,11 @@
 
   .logout-box {
     margin-bottom: 1rem;
+
+    @media only screen and (max-width: 42em) {
+      margin-top: auto;
+      margin-bottom: 10rem;
+    }
   }
 
   .sidemenu-box-list-wrap {
@@ -88,7 +93,10 @@
     width: 100%;
     margin-top: 3rem;
     flex: 1;
-    // overflow-y: scroll;
+
+    @media only screen and (max-width: 42em) {
+      flex: unset;
+    }
 
     &::-webkit-scrollbar {
       display: none;

@@ -70,6 +70,12 @@
 .side-menu-nav-dashboard-index .logout-box {
   margin-bottom: 1rem;
 }
+@media only screen and (max-width: 42em) {
+  .side-menu-nav-dashboard-index .logout-box {
+    margin-top: auto;
+    margin-bottom: 10rem;
+  }
+}
 .side-menu-nav-dashboard-index .sidemenu-box-list-wrap {
   display: flex;
   flex-direction: column;
@@ -77,6 +83,11 @@
   width: 100%;
   margin-top: 3rem;
   flex: 1;
+}
+@media only screen and (max-width: 42em) {
+  .side-menu-nav-dashboard-index .sidemenu-box-list-wrap {
+    flex: unset;
+  }
 }
 .side-menu-nav-dashboard-index .sidemenu-box-list-wrap::-webkit-scrollbar {
   display: none;

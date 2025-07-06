@@ -99,14 +99,18 @@ const PeopleGraph = forwardRef<PeopleGraphHandle, Props>(
     const [hoveredConnectedNodeNames, setHoveredConnectedNodeNames] = useState<
       string[]
     >([]);
-
+    const { width } = useWindowSize();
     const size = useWindowSize();
     const minZoom = 0.5;
-    const nodeSize = Number(size?.width) > 700 ? 25 : 10;
+    const nodeSize = Number(size?.width) > 700 ? 25 : 30;
     const defaultLinkColor = "#b4c4ec";
     const animateValue = (
-        _p0: string, //   key: string,
-from: number, to: number, duration: number, updater: (val: number) => void    ) => {
+      _p0: string, //   key: string,
+      from: number,
+      to: number,
+      duration: number,
+      updater: (val: number) => void
+    ) => {
       const start = performance.now();
       const step = (now: number) => {
         const progress = Math.min((now - start) / duration, 1);
@@ -361,6 +365,22 @@ from: number, to: number, duration: number, updater: (val: number) => void    ) 
       },
       [focusedNodeIds, highlightNodes]
     );
+
+    useEffect(() => {
+      const fg = fgRef.current;
+      if (!fg || !width) return;
+
+      // Dynamically calculate link distance
+      const baseDistance = 130;
+      const minDistance = 40;
+      const responsiveDistance = Math.max(
+        minDistance,
+        baseDistance * (width / 1920)
+      );
+
+      fg.d3Force("charge")?.strength(-180);
+      fg.d3Force("link")?.distance(responsiveDistance);
+    }, [width]);
 
     useEffect(() => {
       nodes.forEach((n) => {
