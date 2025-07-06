@@ -1,0 +1,57 @@
+.delete-modal-reuse-wrap .raven-modal-content-wrap .close-box {
+    display: none;
+  }
+  .delete-modal-reuse-wrap .raven-modal-content-wrap .container-wrap {
+    width: 100%;
+    padding-bottom: 10rem;
+    margin-top: 3rem;
+  }
+  .delete-modal-reuse-wrap .raven-modal-content-wrap .container-wrap .title {
+    font-weight: 700;
+    font-size: 1.9rem;
+    margin-bottom: 1.5rem;
+  }
+  .delete-modal-reuse-wrap .raven-modal-content-wrap .container-wrap .text {
+    font-size: 1.45rem;
+    width: 90%;
+  }
+  .delete-modal-reuse-wrap .raven-modal-content-wrap .container-wrap .pin-test {
+    margin-bottom: 3rem;
+  }
+  .delete-modal-reuse-wrap .raven-modal-content-wrap .two-button-wrap {
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    background-color: #f7f8f7;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 1.5rem 2rem;
+    gap: 2rem;
+  } 
+  .delete-modal-reuse-wrap .raven-modal-content-wrap .two-button-wrap .cancel {
+    cursor: pointer;
+    font-size: 1.5rem;
+  }
+  
+  .transaction-pin-modal-reuse-wrap .container-wrap {
+    width: 100%;
+    margin-bottom: 2rem;
+  }
+  .transaction-pin-modal-reuse-wrap .container-wrap .pin-group .pin_field {
+    height: 4.6rem !important;
+    width: 4.6rem !important;
+  }
+  .transaction-pin-modal-reuse-wrap .container-wrap .title {
+    font-weight: 700;
+    font-size: 1.9rem;
+    margin-bottom: 0.5rem;
+  }
+  .transaction-pin-modal-reuse-wrap .container-wrap .text {
+    font-size: 1.3rem;
+    width: 90%;
+  }
+  .transaction-pin-modal-reuse-wrap .container-wrap .pin-test {
+    margin-bottom: 3rem;
+  }/*# sourceMappingURL=DeleteModal.css.map */

@@ -1,0 +1,105 @@
+.side-menu-nav-dashboard-index {
+  width: 100%;
+  height: 100%;
+  background-color: #fff;
+  border-radius: 2rem;
+  //   margin-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem 0rem;
+  gap: 1.6rem;
+
+  @media only screen and (max-width: 42em) {
+    border-radius: 0.8rem;
+  }
+
+  .app-logo-box {
+    width: 3.5rem;
+    height: 3.5rem;
+    cursor: pointer;
+
+    .img-box {
+      width: 100%;
+      height: 100%;
+
+      svg {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+      }
+    }
+  }
+
+  .collapse-icon-peer {
+    width: 2.5rem;
+    height: 2.5rem;
+    cursor: pointer;
+
+    @media only screen and (max-width: 42em) {
+      display: none;
+    }
+
+    .img-box {
+      width: 100%;
+      height: 100%;
+
+      svg {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        transition: 0.3s all ease-in-out;
+      }
+    }
+  }
+
+  .logo-collapse-box {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    justify-content: space-between;
+    padding: 0rem 1rem;
+  }
+
+  .logo-collapse-box-collapsed {
+    flex-direction: column;
+    gap: 2rem;
+    width: max-content;
+    justify-content: center;
+
+    .collapse-icon-peer {
+      .img-box {
+        svg {
+          transform: rotate(900deg);
+        }
+      }
+    }
+  }
+
+  .logout-box {
+    margin-bottom: 1rem;
+  }
+
+  .sidemenu-box-list-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    // background-color: red;
+    width: 100%;
+    margin-top: 3rem;
+    flex: 1;
+    // overflow-y: scroll;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+
+    @media only screen and (min-width: 42em) {
+      .menu-fragment-wrapper-index-reusable-collapse {
+        width: 100%;
+        display: grid;
+        place-items: center;
+      }
+    }
+  }
+}

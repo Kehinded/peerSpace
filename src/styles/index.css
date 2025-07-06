@@ -1,0 +1,78 @@
+@import url("https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400..700;1,400..700&display=swap");
+:root {
+  --primary-color: #365ed9;
+  --white-color: #ffffff;
+  --box-shadow: 0.1rem 0.1rem 8rem 0.1rem rgba(0, 0, 0, 0.1);
+  --box-shadow-two: 0.1rem 0.1rem 8rem 0.1rem rgba(0, 0, 0, 0.05),
+    -0.1rem -0.1rem 8rem 0.1rem rgba(0, 0, 0, 0.05);
+  --border-color: rgba(208, 213, 221, 0.5);
+}
+
+*,
+*::after,
+*::before {
+  margin: 0;
+  padding: 0;
+  box-sizing: inherit;
+}
+
+html {
+  font-size: 55.5% !important;
+  box-sizing: border-box;
+}
+@media only screen and (max-width: 75em) {
+  html {
+    font-size: 52% !important;
+  }
+}
+
+body {
+  font-size: 1.4rem;
+  font-family: "Instrument Sans", sans-serif !important;
+  font-weight: 400;
+  /* overflow-x: hidden !important; */
+  position: relative;
+  width: 100vw;
+  overscroll-behavior: none;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  color: #020202;
+  /* Hide scrollbar for IE, Edge and Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+body::-webkit-scrollbar {
+  display: none;
+}
+
+.form-group__black-light .input-submit,
+input {
+  font-family: "Instrument Sans", sans-serif !important;
+}
+
+.raven-btn,
+.form-label,
+.form-group__black-light .react-select-class-selected > *:nth-child(3) > *:nth-child(1) > *:nth-child(1),
+.css-19gyxg0-option {
+  font-family: "Instrument Sans", sans-serif !important;
+}
+
+.toggle-wrap .toggle-input:checked ~ .toggle-label__black-light,
+.toggle-wrap .toggle-input:checked ~ .toggle-label__black-light .child-one,
+.form-group__black-light .input-submit,
+.btn-black-light,
+.check-box-wrap .input-check:checked ~ .label-check__black-light,
+.tool-tip-wrap__black-light,
+.tool-tip-wrap__black-light::after {
+  background-color: var(--primary-color) !important;
+}
+
+@media only screen and (max-width: 48em) {
+  .form-group .input-submit {
+    height: 5rem !important;
+  }
+}
+
+.delete-modal-reuse-wrap .raven-modal-content-wrap .container-wrap {
+  margin-top: -3rem !important;
+}/*# sourceMappingURL=index.css.map */
