@@ -5,6 +5,7 @@ import SideNavComp from "./SideNavComp";
 import "../../../styles/layout/dashboard/DashboardLayout.css";
 import HeaderNavComp from "./HeaderNavComp";
 import ConfirmLogoutModal from "./ConfirmLogoutModal";
+import ScrollToTop from "../../fragments/ScrollTop";
 
 interface myComponentProps {
   children?: React.ReactNode;
@@ -14,6 +15,7 @@ const DashboardLayout = ({ children }: myComponentProps) => {
   const actionCtx = useContext(ActionContext);
   return (
     <>
+      <ScrollToTop />
       <RazorLayout
         collapse={actionCtx?.sideNavCollapsed}
         collapsible={true}

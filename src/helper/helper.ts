@@ -282,3 +282,10 @@ export function colorToRgba(color: string, opacity: number | string): string {
   const [r, g, b] = match.map(Number);
   return `rgba(${r}, ${g}, ${b}, ${defaultOpacity})`;
 }
+
+
+export function scrollToTopVH(vh: number = 0): void {
+    const pixels = (vh / 100) * window.innerHeight;
+    window.scrollTo({ top: pixels, behavior: "smooth" });
+  }
+  

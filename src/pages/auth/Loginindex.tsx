@@ -2,9 +2,9 @@
 import "../../styles/auth/LoginIndex.css";
 import { RazorButton, RazorInputField } from "@kehinded/razor-ui";
 import { useState } from "react";
-import { ValidateData } from "../../helper/helper";
+import { scrollToTopVH, ValidateData } from "../../helper/helper";
 // import { useNavigation } from "react-router-dom";
-import {  encrypt2 } from "../../utils/encrypt";
+import { encrypt2 } from "../../utils/encrypt";
 import { useNavigate } from "react-router-dom";
 import { ROUTE_PATH } from "../../routes/RouteList";
 import AuthLayout from "../../components/layout/auth/AuthLayout";
@@ -45,6 +45,7 @@ const Loginindex = () => {
     localStorage?.setItem("kractos", encryptData);
     localStorage?.setItem("gelatomi", toks);
     navigate(ROUTE_PATH?.OVERVIEW);
+    scrollToTopVH();
   };
 
   const handleSubmit = () => {
@@ -61,6 +62,7 @@ const Loginindex = () => {
     localStorage?.setItem("kractos", encryptData);
     localStorage?.setItem("gelatomi", toks);
     navigate(ROUTE_PATH?.OVERVIEW);
+    scrollToTopVH();
   };
 
   return (

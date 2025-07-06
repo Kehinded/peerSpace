@@ -9,6 +9,7 @@ import PeopleGraph, {
 } from "../../../components/fragments/NodeMapComp";
 import { links, nodes, userName } from "../../../utils/NodeData";
 import ActionContext from "../../../context/ActionContext";
+import { scrollToTopVH } from "../../../helper/helper";
 
 const OverviewIndex = () => {
   const actionCtx = useContext(ActionContext);
@@ -43,11 +44,18 @@ const OverviewIndex = () => {
               onChange={(e?: any) => {
                 setSearch(e?.target.value);
               }}
+              onBlur={() => {
+                scrollToTopVH();
+              }}
             />
             {/* search here end */}
             {/* filter box here  */}
             <div className="filter-box">
-              <RazorInputField placeholder="Filter by:" color="black-light" type="select" />
+              <RazorInputField
+                placeholder="Filter by:"
+                color="black-light"
+                type="select"
+              />
             </div>
             {/* filter box end */}
           </div>
