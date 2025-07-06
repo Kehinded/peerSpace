@@ -17,6 +17,7 @@ import type {
 } from "react-force-graph-2d";
 import ActionContext from "../../context/ActionContext";
 import useWindowSize from "../../helper/useWindowClick";
+import { scrollToTopVH } from "../../helper/helper";
 
 export type GraphNode = {
   id: string;
@@ -235,6 +236,7 @@ const PeopleGraph = forwardRef<PeopleGraphHandle, Props>(
     };
 
     const resetGraphToDefault = () => {
+      scrollToTopVH();
       const fg = fgRef.current;
       if (!fg) return;
 
@@ -380,6 +382,7 @@ const PeopleGraph = forwardRef<PeopleGraphHandle, Props>(
 
       fg.d3Force("charge")?.strength(-180);
       fg.d3Force("link")?.distance(responsiveDistance);
+      
     }, [width]);
 
     useEffect(() => {

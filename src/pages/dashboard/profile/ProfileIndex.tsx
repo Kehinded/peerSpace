@@ -3,7 +3,9 @@ import DashboardLayout from "../../../components/layout/dashboard/DashboardLayou
 const ProfileIndex = () => {
   return (
     <>
-      <DashboardLayout></DashboardLayout>
+      <DashboardLayout>
+        <p>Profile page</p>
+      </DashboardLayout>
     </>
   );
 };

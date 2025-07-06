@@ -1,4 +1,4 @@
-import  { useContext } from "react";
+import { useContext } from "react";
 import "../../../styles/layout/dashboard/SideNavComp.css";
 import { ALL_ICONS } from "../../../assets/AllIcons";
 import ActionContext from "../../../context/ActionContext";
@@ -23,7 +23,7 @@ const SideNavComp = () => {
       name: "profile",
       icon: ALL_ICONS?.sidemenu_profile,
       icon_two: ALL_ICONS?.sidemenu_profile_active,
-      //   link: ROUTE_PATH?.OVERVIEW,
+      link: ROUTE_PATH?.PROFILE,
     },
     {
       name: "support",
