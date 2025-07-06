@@ -32,7 +32,7 @@ const Loginindex = () => {
   const defaultObj = {
     first_name: "Kehinde-Paul",
     last_name: "Ayeni",
-    designation: "Radiologist",
+    designation: "Anatomist",
     work_place: "NHOG",
     followers: "456",
     peers: "678",
