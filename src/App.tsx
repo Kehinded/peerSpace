@@ -36,7 +36,7 @@ function App() {
             property="og:image"
             content="https://res.cloudinary.com/dvgwgaqrk/image/upload/v1751823182/peerspace-favicon_fabk5m.png"
           />
-          <meta property="og:url" content="https://getravenbank.com" />
+          <meta property="og:url" content="https://peer-space.vercel.app" />
           <meta name="robots" content="index, follow" />
           <meta
             property="twitter:image:src"
