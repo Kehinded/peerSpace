@@ -617,7 +617,7 @@ import {
               onBackgroundClick={resetGraphToDefault}
               ref={fgRef}
               graphData={graphData}
-              backgroundColor="transparent"
+              backgroundColor="#fff"
               linkColor={getLinkColor}
               linkWidth={getLinkWidth}
               cooldownTicks={120}

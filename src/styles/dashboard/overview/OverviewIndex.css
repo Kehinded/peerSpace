@@ -82,7 +82,7 @@
   display: none;
 }
 .overview-peer-index-wrap-box .down-profile-content-box-wrap .content-two-box-wrap .profile-content-box {
-  width: 0;
+  width: 0rem;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
@@ -367,6 +367,7 @@
   overflow: scroll;
   position: relative;
   border-radius: 1.2rem;
+  background-color: #fff;
 }
 @media only screen and (max-width: 75em) {
   .overview-peer-index-wrap-box .down-profile-content-box-wrap .content-two-box-wrap .map-container-wrapper {
@@ -378,4 +379,8 @@
   position: absolute;
   top: 0%;
   left: 0%;
+  background-color: #fff;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
 }/*# sourceMappingURL=OverviewIndex.css.map */
