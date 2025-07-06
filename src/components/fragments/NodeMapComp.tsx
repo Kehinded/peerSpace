@@ -103,7 +103,7 @@ const PeopleGraph = forwardRef<PeopleGraphHandle, Props>(
     const { width } = useWindowSize();
     const size = useWindowSize();
     const minZoom = 0.5;
-    const nodeSize = Number(size?.width) > 700 ? 25 : 30;
+    const nodeSize = Number(size?.width) > 700 ? 25 : 25;
     const defaultLinkColor = "#b4c4ec";
     const animateValue = (
       _p0: string, //   key: string,
@@ -382,7 +382,6 @@ const PeopleGraph = forwardRef<PeopleGraphHandle, Props>(
 
       fg.d3Force("charge")?.strength(-180);
       fg.d3Force("link")?.distance(responsiveDistance);
-      
     }, [width]);
 
     useEffect(() => {
@@ -588,21 +587,74 @@ const PeopleGraph = forwardRef<PeopleGraphHandle, Props>(
             }}
             enableNodeDrag={false}
             onNodeHover={(node) => {
-              const n = node as GraphNode | null;
-              setHoveredNode(n);
-              setHoveredLink(null);
+              if (Number(width) > 700) {
+                const n = node as GraphNode | null;
+                setHoveredNode(n);
+                setHoveredLink(null);
 
-              if (!n) {
-                setHighlightNodes(new Set());
-                setHighlightLinks(new Set());
-                setHoveredConnectedNodeNames([]);
-                return;
+                if (!n) {
+                  setHighlightNodes(new Set());
+                  setHighlightLinks(new Set());
+                  setHoveredConnectedNodeNames([]);
+                  return;
+                }
+
+                const connectedNodes = new Set<string>();
+                const connectedLinks = new Set<string>();
+
+                links.forEach((link) => {
+                  const sourceId =
+                    typeof link.source === "string"
+                      ? link.source
+                      : link.source.id;
+                  const targetId =
+                    typeof link.target === "string"
+                      ? link.target
+                      : link.target.id;
+
+                  if (sourceId === n.id) {
+                    connectedNodes.add(targetId);
+                    connectedLinks.add(`${sourceId}-${targetId}`);
+                  } else if (targetId === n.id) {
+                    connectedNodes.add(sourceId);
+                    connectedLinks.add(`${sourceId}-${targetId}`);
+                  }
+                });
+
+                connectedNodes.add(n.id);
+                setHighlightNodes(connectedNodes);
+                setHighlightLinks(connectedLinks);
+
+                const names = nodes
+                  .filter((node) => connectedNodes.has(node.id))
+                  .map((n) => n.name);
+                setHoveredConnectedNodeNames(names);
+                //   if (n.id !== lastHoveredNodeIdRef.current) {
+                //     lastHoveredNodeIdRef.current = n.id;
+                //     hasTriggeredRef.current = false;
+                //     if (hoverTimerRef.current) {
+                //       clearTimeout(hoverTimerRef.current);
+                //     }
+
+                //     hoverTimerRef.current = setTimeout(() => {
+                //       if (!hasTriggeredRef.current) {
+                //         hasTriggeredRef.current = true;
+                //         if (onNodeHover) onNodeHover(n);
+                //       }
+                //     }, 3000);
+                //   }
               }
+            }}
+            onLinkHover={(link) => {
+              if (Number(width) > 700) {
+                setHoveredLink(link as GraphLink | null);
+                if (!link) {
+                  setHighlightNodes(new Set());
+                  setHighlightLinks(new Set());
+                  setHoveredConnectedNodeNames([]);
+                  return;
+                }
 
-              const connectedNodes = new Set<string>();
-              const connectedLinks = new Set<string>();
-
-              links.forEach((link) => {
                 const sourceId =
                   typeof link.source === "string"
                     ? link.source
@@ -612,55 +664,10 @@ const PeopleGraph = forwardRef<PeopleGraphHandle, Props>(
                     ? link.target
                     : link.target.id;
 
-                if (sourceId === n.id) {
-                  connectedNodes.add(targetId);
-                  connectedLinks.add(`${sourceId}-${targetId}`);
-                } else if (targetId === n.id) {
-                  connectedNodes.add(sourceId);
-                  connectedLinks.add(`${sourceId}-${targetId}`);
-                }
-              });
-
-              connectedNodes.add(n.id);
-              setHighlightNodes(connectedNodes);
-              setHighlightLinks(connectedLinks);
-
-              const names = nodes
-                .filter((node) => connectedNodes.has(node.id))
-                .map((n) => n.name);
-              setHoveredConnectedNodeNames(names);
-              //   if (n.id !== lastHoveredNodeIdRef.current) {
-              //     lastHoveredNodeIdRef.current = n.id;
-              //     hasTriggeredRef.current = false;
-              //     if (hoverTimerRef.current) {
-              //       clearTimeout(hoverTimerRef.current);
-              //     }
-
-              //     hoverTimerRef.current = setTimeout(() => {
-              //       if (!hasTriggeredRef.current) {
-              //         hasTriggeredRef.current = true;
-              //         if (onNodeHover) onNodeHover(n);
-              //       }
-              //     }, 3000);
-              //   }
-            }}
-            onLinkHover={(link) => {
-              setHoveredLink(link as GraphLink | null);
-              if (!link) {
-                setHighlightNodes(new Set());
-                setHighlightLinks(new Set());
+                setHighlightNodes(new Set([sourceId, targetId]));
+                setHighlightLinks(new Set([`${sourceId}-${targetId}`]));
                 setHoveredConnectedNodeNames([]);
-                return;
               }
-
-              const sourceId =
-                typeof link.source === "string" ? link.source : link.source.id;
-              const targetId =
-                typeof link.target === "string" ? link.target : link.target.id;
-
-              setHighlightNodes(new Set([sourceId, targetId]));
-              setHighlightLinks(new Set([`${sourceId}-${targetId}`]));
-              setHoveredConnectedNodeNames([]);
             }}
             onNodeClick={(node) => {
               const clicked = node as GraphNode;
