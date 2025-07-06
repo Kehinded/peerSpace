@@ -513,30 +513,98 @@ import {
           );
         });
       }, [highlightNodes, highlightLinks, focusedNodeIds]);
-  
       useEffect(() => {
         if (!showArrayConnections || !showOnlyForNames.length) return;
-  
+      
         const fg = fgRef.current;
-        if (!fg) return;
-  
+        const container = fgContainerRef.current;
+        if (!fg || !container) return;
+      
         const matchingNodes = nodes.filter((n) =>
           showOnlyForNames.includes(n.name)
         );
-  
+      
         if (matchingNodes.length === 0) return;
-  
-        // Compute average center
-        const avgX =
-          matchingNodes.reduce((sum, n) => sum + (n.x || 0), 0) /
-          matchingNodes.length;
-        const avgY =
-          matchingNodes.reduce((sum, n) => sum + (n.y || 0), 0) /
-          matchingNodes.length;
-  
+      
+        const matchingIds = new Set(matchingNodes.map((n) => n.id));
+        const connectedLinks = new Set<string>();
+        const connectedNodeIds = new Set<string>();
+      
+        links.forEach((link) => {
+          const sourceId = typeof link.source === "string" ? link.source : link.source.id;
+          const targetId = typeof link.target === "string" ? link.target : link.target.id;
+          if (matchingIds.has(sourceId) || matchingIds.has(targetId)) {
+            connectedLinks.add(`${sourceId}-${targetId}`);
+            connectedNodeIds.add(sourceId);
+            connectedNodeIds.add(targetId);
+          }
+        });
+      
+        const allVisibleIds = new Set([...matchingIds, ...connectedNodeIds]);
+      
+        setHighlightNodes(allVisibleIds);
+        setHighlightLinks(connectedLinks);
+      
+        nodes.forEach((n) => {
+          const isFocused = allVisibleIds.has(n.id);
+          const targetOpacity = isFocused ? 1 : 0.1;
+          const targetRadius = isFocused ? nodeSize * 1.4 : nodeSize * 0.8;
+      
+          animateValue(
+            `r-${n.id}`,
+            animatedStyles.nodeRadii[n.id] ?? nodeSize,
+            targetRadius,
+            300,
+            (val) =>
+              setAnimatedStyles((prev) => ({
+                ...prev,
+                nodeRadii: { ...prev.nodeRadii, [n.id]: val },
+              }))
+          );
+      
+          animateValue(
+            `op-${n.id}`,
+            animatedStyles.nodeOpacities[n.id] ?? 1,
+            targetOpacity,
+            300,
+            (val) =>
+              setAnimatedStyles((prev) => ({
+                ...prev,
+                nodeOpacities: { ...prev.nodeOpacities, [n.id]: val },
+              }))
+          );
+        });
+      
+        links.forEach((link) => {
+          const sourceId = typeof link.source === "string" ? link.source : link.source.id;
+          const targetId = typeof link.target === "string" ? link.target : link.target.id;
+          const key = `${sourceId}-${targetId}`;
+          const shouldShow = connectedLinks.has(key);
+          const targetOpacity = shouldShow ? 1 : 0.05;
+      
+          animateValue(
+            `link-${key}`,
+            animatedStyles.linkOpacities[key] ?? 1,
+            targetOpacity,
+            300,
+            (val) =>
+              setAnimatedStyles((prev) => ({
+                ...prev,
+                linkOpacities: { ...prev.linkOpacities, [key]: val },
+              }))
+          );
+        });
+      
+        const avgX = matchingNodes.reduce((sum, n) => sum + (n.x || 0), 0) / matchingNodes.length;
+        const avgY = matchingNodes.reduce((sum, n) => sum + (n.y || 0), 0) / matchingNodes.length;
+      
         fg.centerAt(avgX, avgY, 1000);
         fg.zoom(2, 1000);
       }, [showArrayConnections, showOnlyForNames, nodes]);
+    
+      
+      
+      
   
       useEffect(() => {
         const fg = fgRef.current;
@@ -663,7 +731,7 @@ import {
               }}
               enableNodeDrag={false}
               onNodeHover={(node) => {
-                if (searchedNode || Number(width) <= 700) return;
+                if (searchedNode || Number(width) <= 700 || showArrayConnections) return;
                 if (Number(width) > 700) {
                   const n = node as GraphNode | null;
                   setHoveredNode(n);
@@ -723,7 +791,7 @@ import {
                 }
               }}
               onLinkHover={(link) => {
-                if (searchedNode || Number(width) <= 700) return;
+                if (searchedNode || Number(width) <= 700 || showArrayConnections) return;
                 if (Number(width) > 700) {
                   setHoveredLink(link as GraphLink | null);
                   if (!link) {
