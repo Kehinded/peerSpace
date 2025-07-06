@@ -102,7 +102,7 @@
         @media only screen and (max-width: 75em) {
           width: 100%;
           padding-bottom: 0rem;
-          order: 1;
+        //   order: 1;
         }
 
         &::-webkit-scrollbar {
@@ -425,7 +425,7 @@
 
         @media only screen and (max-width: 75em) {
           flex: unset;
-          height: 60vh;
+          height: calc(100vh - 25rem);
         }
 
         & > * {

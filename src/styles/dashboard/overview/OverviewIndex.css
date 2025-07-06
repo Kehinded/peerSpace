@@ -98,7 +98,6 @@
   .overview-peer-index-wrap-box .down-profile-content-box-wrap .content-two-box-wrap .profile-content-box {
     width: 100%;
     padding-bottom: 0rem;
-    order: 1;
   }
 }
 .overview-peer-index-wrap-box .down-profile-content-box-wrap .content-two-box-wrap .profile-content-box::-webkit-scrollbar {
@@ -372,7 +371,7 @@
 @media only screen and (max-width: 75em) {
   .overview-peer-index-wrap-box .down-profile-content-box-wrap .content-two-box-wrap .map-container-wrapper {
     flex: unset;
-    height: 60vh;
+    height: calc(100vh - 25rem);
   }
 }
 .overview-peer-index-wrap-box .down-profile-content-box-wrap .content-two-box-wrap .map-container-wrapper > * {
