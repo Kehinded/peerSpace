@@ -1,9 +1,11 @@
-import React from 'react'
+import DashboardLayout from "../../../components/layout/dashboard/DashboardLayout";
 
 const ProfileIndex = () => {
   return (
-    <div>ProfileIndex</div>
-  )
-}
+    <>
+      <DashboardLayout></DashboardLayout>
+    </>
+  );
+};
 
-export default ProfileIndex
+export default ProfileIndex;

@@ -9,8 +9,6 @@ import PeopleGraph, {
 } from "../../../components/fragments/NodeMapComp";
 import { links, nodes, userName } from "../../../utils/NodeData";
 import ActionContext from "../../../context/ActionContext";
-import { EmptyState } from "../../../components/fragments/EmptyState";
-import { Users } from "lucide-react";
 
 const OverviewIndex = () => {
   const actionCtx = useContext(ActionContext);

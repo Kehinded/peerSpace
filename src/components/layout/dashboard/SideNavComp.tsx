@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import  { useContext } from "react";
 import "../../../styles/layout/dashboard/SideNavComp.css";
 import { ALL_ICONS } from "../../../assets/AllIcons";
 import ActionContext from "../../../context/ActionContext";
@@ -6,7 +6,7 @@ import { RazorMenuFragment, RazorToolTip } from "@kehinded/razor-ui";
 import { ROUTE_PATH } from "../../../routes/RouteList";
 import { useLocation, useNavigate } from "react-router-dom";
 import { colorToRgba } from "../../../helper/helper";
-import useWindowSize from "../../../helper/useWindowClick";
+// import useWindowSize from "../../../helper/useWindowClick";
 
 const SideNavComp = () => {
   const actionCtx = useContext(ActionContext);

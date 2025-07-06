@@ -105,12 +105,8 @@ const PeopleGraph = forwardRef<PeopleGraphHandle, Props>(
     const nodeSize = Number(size?.width) > 700 ? 25 : 10;
     const defaultLinkColor = "#b4c4ec";
     const animateValue = (
-      key: string,
-      from: number,
-      to: number,
-      duration: number,
-      updater: (val: number) => void
-    ) => {
+        _p0: string, //   key: string,
+from: number, to: number, duration: number, updater: (val: number) => void    ) => {
       const start = performance.now();
       const step = (now: number) => {
         const progress = Math.min((now - start) / duration, 1);

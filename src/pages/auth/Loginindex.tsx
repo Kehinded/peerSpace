@@ -4,7 +4,7 @@ import { RazorButton, RazorInputField } from "@kehinded/razor-ui";
 import { useState } from "react";
 import { ValidateData } from "../../helper/helper";
 // import { useNavigation } from "react-router-dom";
-import { decrypt2, encrypt2 } from "../../utils/encrypt";
+import {  encrypt2 } from "../../utils/encrypt";
 import { useNavigate } from "react-router-dom";
 import { ROUTE_PATH } from "../../routes/RouteList";
 import AuthLayout from "../../components/layout/auth/AuthLayout";

@@ -15,7 +15,7 @@ import {
     NodeObject,
     LinkObject,
   } from "react-force-graph-2d";
-  import { useOnClickOutside } from "../../helper/UseOnClickOutside";
+//   import { useOnClickOutside } from "../../helper/UseOnClickOutside";
   import ActionContext from "../../context/ActionContext";
   
   export type GraphNode = {
@@ -99,7 +99,7 @@ import {
       >([]);
   
       const animateValue = (
-        key: string,
+        _key: string,
         from: number,
         to: number,
         duration: number,

@@ -107,24 +107,7 @@ type AreEqualParams = {
  * - array with length < 1 or all elements empty
  * - object with no keys or all keys empty values
  */
-function isEmpty(value: any): boolean {
-  if (value === null || value === undefined) return true;
-  if (typeof value === "string") {
-    return value.trim() === "";
-  }
-  if (Array.isArray(value)) {
-    if (value.length === 0) return true;
-    // Check if every element is empty
-    return value.every(isEmpty);
-  }
-  if (typeof value === "object") {
-    const keys = Object.keys(value);
-    if (keys.length === 0) return true;
-    // Check if every key's value is empty
-    return keys.every((key) => isEmpty(value[key]));
-  }
-  return false;
-}
+
 /**
  * Checks if two values are equal under custom rules.
  */
