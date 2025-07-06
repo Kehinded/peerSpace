@@ -34,13 +34,13 @@ function App() {
           <meta name="audience" content="Everyone" />
           <meta
             property="og:image"
-            content="https://s3.eu-west-2.amazonaws.com/img.creativepool.com/files/candidate/portfolio/full/2022460.jpg"
+            content="https://res.cloudinary.com/dvgwgaqrk/image/upload/v1751822651/Doctors-rafiki_bsprbf.png"
           />
           <meta property="og:url" content="https://getravenbank.com" />
           <meta name="robots" content="index, follow" />
           <meta
             property="twitter:image:src"
-            content="https://s3.eu-west-2.amazonaws.com/img.creativepool.com/files/candidate/portfolio/full/2022460.jpg"
+            content="https://res.cloudinary.com/dvgwgaqrk/image/upload/v1751822651/Doctors-rafiki_bsprbf.png"
           />
           <meta name="twitter:card" content="summary_large_image" />
           <meta name="twitter:image:alt" content="GetRavenBank" />
