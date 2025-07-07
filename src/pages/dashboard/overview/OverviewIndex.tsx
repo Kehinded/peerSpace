@@ -10,11 +10,35 @@ import PeopleGraph, {
 import { links, nodes, userName } from "../../../utils/NodeData";
 import ActionContext from "../../../context/ActionContext";
 import { scrollToTopVH } from "../../../helper/helper";
+import { FaFilter, FaInfoCircle, FaSearch, FaSwift } from "react-icons/fa";
 
 const OverviewIndex = () => {
   const actionCtx = useContext(ActionContext);
   const graphRef = useRef<PeopleGraphHandle>(null);
-  //   const [search, setSearch] = useState("");
+
+  const iconList = [
+    { name: "Filter", onClick: () => {}, icon: <FaFilter className="icon" /> },
+    {
+      name: "Search",
+      onClick: () => {
+        focusSearchInput();
+      },
+      icon: <FaSearch className="icon" />,
+    },
+    {
+      name: "Info",
+      onClick: () => {},
+      icon: <FaInfoCircle className="icon" />,
+    },
+    {
+      name: "Reset",
+      onClick: () => {
+        handleReset();
+      },
+      icon: <FaSwift className="icon" />,
+    },
+  ];
+
   const handleSearch = (name: string) => {
     const data = graphRef.current?.focusOnNode(name);
     if (Number(data?.length) > 0) {
@@ -22,6 +46,17 @@ const OverviewIndex = () => {
     } else {
       actionCtx?.setSingleNodeinfo && actionCtx?.setSingleNodeinfo([]);
     }
+  };
+
+  const handleReset = () => {
+    graphRef.current?.resetGraphToDefault();
+  };
+
+  const focusSearchInput = () => {
+    const input = document.getElementById(
+      "search-input-peer"
+    ) as HTMLInputElement | null;
+    input?.focus();
   };
 
   useEffect(() => {
@@ -38,6 +73,7 @@ const OverviewIndex = () => {
             <RazorInputField
               color="black-light"
               type="search"
+              id="search-input-peer"
               placeholder="Search by HCP name"
               className="search-input-peer"
               value={actionCtx?.search}
@@ -117,6 +153,28 @@ const OverviewIndex = () => {
                   showArrayConnections={actionCtx?.connections?.connection_map}
                   showOnlyForNames={[userName]}
                 />
+                {/* icons-bow-wrapper start */}
+                <div className="icons-wrapper-box">
+                  {iconList?.map((chi, idx) => {
+                    return (
+                      <div
+                        onClick={() => {
+                          chi?.onClick && chi?.onClick();
+                        }}
+                        key={idx}
+                        className="icon-box tooltip-hover-wrap"
+                      >
+                        {chi?.icon}
+                        {/* <RazorToolTip
+                          position={`left`}
+                          color="black-light"
+                          text={chi?.name}
+                        /> */}
+                      </div>
+                    );
+                  })}
+                </div>
+                {/* icons-bow-wrapper end */}
               </div>
               {/* map container end */}
             </div>
