@@ -271,11 +271,33 @@ const PeopleGraph = forwardRef<PeopleGraphHandle, Props>(
       resetGraphToDefault,
     }));
 
+    function isGraphVisible(container: HTMLDivElement): boolean {
+      const rect = container.getBoundingClientRect();
+      const viewHeight =
+        window.innerHeight || document.documentElement.clientHeight;
+      const viewWidth =
+        window.innerWidth || document.documentElement.clientWidth;
+
+      return (
+        rect.bottom > 0 &&
+        rect.top < viewHeight &&
+        rect.right > 0 &&
+        rect.left < viewWidth
+      );
+    }
     const filterList = (list?: string[], param?: string): string[] => {
       if (Array.isArray(list)) {
         return list.filter((ch) => ch !== param);
       }
       return [];
+    };
+
+    const clearHoverStates = () => {
+      setHoveredNode(null);
+      setHoveredLink(null);
+      setHighlightNodes(new Set());
+      setHighlightLinks(new Set());
+      setHoveredConnectedNodeNames([]);
     };
 
     const resetGraphToDefault = () => {
@@ -411,6 +433,24 @@ const PeopleGraph = forwardRef<PeopleGraphHandle, Props>(
       },
       [focusedNodeIds, highlightNodes]
     );
+
+    useEffect(() => {
+      const container = fgContainerRef.current;
+      if (!container) return;
+
+      const handleMouseLeave = () => {
+        // Only reset if we're not in a search or filtered view
+        if (!searchedNode && !showArrayConnections) {
+          clearHoverStates();
+        }
+      };
+
+      container.addEventListener("mouseleave", handleMouseLeave);
+
+      return () => {
+        container.removeEventListener("mouseleave", handleMouseLeave);
+      };
+    }, [searchedNode, showArrayConnections]);
 
     useEffect(() => {
       const fg = fgRef.current;
@@ -733,7 +773,13 @@ const PeopleGraph = forwardRef<PeopleGraphHandle, Props>(
             }}
             enableNodeDrag={false}
             onNodeHover={(node) => {
-              if (searchedNode || Number(width) <= 700 || showArrayConnections)
+              if (
+                searchedNode ||
+                Number(width) <= 700 ||
+                showArrayConnections ||
+                !fgContainerRef.current ||
+                !isGraphVisible(fgContainerRef.current)
+              )
                 return;
               if (Number(width) > 700) {
                 const n = node as GraphNode | null;
@@ -794,7 +840,13 @@ const PeopleGraph = forwardRef<PeopleGraphHandle, Props>(
               }
             }}
             onLinkHover={(link) => {
-              if (searchedNode || Number(width) <= 700 || showArrayConnections)
+              if (
+                searchedNode ||
+                Number(width) <= 700 ||
+                showArrayConnections ||
+                !fgContainerRef.current ||
+                !isGraphVisible(fgContainerRef.current)
+              )
                 return;
               if (Number(width) > 700) {
                 setHoveredLink(link as GraphLink | null);

@@ -115,12 +115,7 @@ const OverviewIndex = () => {
   return (
     <>
       <DashboardLayout>
-        <div
-          onClick={() => {
-            console.log(getUserName());
-          }}
-          className="overview-peer-index-wrap-box"
-        >
+        <div className="overview-peer-index-wrap-box">
           {/* search filter box start */}
           <div className="search-flter-box-wrap">
             {/* search here start */}
