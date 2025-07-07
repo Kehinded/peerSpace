@@ -14,7 +14,7 @@ import { scrollToTopVH } from "../../../helper/helper";
 const OverviewIndex = () => {
   const actionCtx = useContext(ActionContext);
   const graphRef = useRef<PeopleGraphHandle>(null);
-  const [search, setSearch] = useState("");
+  //   const [search, setSearch] = useState("");
   const handleSearch = (name: string) => {
     const data = graphRef.current?.focusOnNode(name);
     if (Number(data?.length) > 0) {
@@ -25,8 +25,8 @@ const OverviewIndex = () => {
   };
 
   useEffect(() => {
-    handleSearch(search);
-  }, [search]);
+    handleSearch(actionCtx?.search);
+  }, [actionCtx?.search]);
 
   return (
     <>
@@ -40,9 +40,9 @@ const OverviewIndex = () => {
               type="search"
               placeholder="Search by HCP name"
               className="search-input-peer"
-              value={search}
+              value={actionCtx?.search}
               onChange={(e?: any) => {
-                setSearch(e?.target.value);
+                actionCtx?.setSearch && actionCtx?.setSearch(e?.target.value);
               }}
               onBlur={() => {
                 scrollToTopVH();
@@ -97,16 +97,16 @@ const OverviewIndex = () => {
                     // console.log(param);
                     actionCtx?.setSingleNodeinfo &&
                       actionCtx?.setSingleNodeinfo([param]);
-                    if (search) {
-                      setSearch("");
+                    if (actionCtx?.search) {
+                      actionCtx?.setSearch && actionCtx?.setSearch("");
                     }
                   }}
                   onNodeHover={(param) => {
                     // console.log(param);
                     actionCtx?.setSingleNodeinfo &&
                       actionCtx?.setSingleNodeinfo([param]);
-                    if (search) {
-                      setSearch("");
+                    if (actionCtx?.search) {
+                      actionCtx?.setSearch && actionCtx?.setSearch("");
                     }
                   }}
                   ref={graphRef}

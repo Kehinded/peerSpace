@@ -132,7 +132,6 @@ import {
         };
         requestAnimationFrame(step);
       };
-  
       useImperativeHandle(ref, () => ({
         focusOnNode: (searchValue: string) => {
           const fg = fgRef.current;
@@ -141,17 +140,12 @@ import {
   
           const normalizedSearch = searchValue.trim().toLowerCase();
           if (!normalizedSearch) {
-            // Reset chart to default
             setFocusedNodeIds([]);
             setNoMatchMessage(null);
             setSearchedNode(null);
             setSearchedConnectedNodeNames([]);
             setHighlightNodes(new Set());
             setHighlightLinks(new Set());
-            setFocusedNodeIds([]);
-            setNoMatchMessage(null);
-            setSearchedNode(null);
-            setSearchedConnectedNodeNames([]);
             nodes.forEach((n) => {
               delete n.fx;
               delete n.fy;
@@ -162,15 +156,12 @@ import {
             return null;
           }
   
-          // Match if ANY word fragment matches any part of the node name
           const searchTerms = normalizedSearch.split(" ");
-          const matchedNodes = nodes.filter((n) => {
-            const name = n.name.toLowerCase();
-            return searchTerms.some((term) => name.includes(term));
-          });
+          const matchedNodes = nodes.filter((n) =>
+            searchTerms.some((term) => n.name.toLowerCase().includes(term))
+          );
   
           if (matchedNodes.length === 0) {
-            // No match: reset
             setNoMatchMessage(`No peer found for "${searchValue}"`);
             setFocusedNodeIds([]);
             setSearchedNode(null);
@@ -184,45 +175,58 @@ import {
             fg.d3ReheatSimulation();
             return null;
           }
-          if (matchedNodes.length > 0) {
-            setNoMatchMessage(null);
-          }
   
+          setNoMatchMessage(null);
           const firstNode = matchedNodes[0];
           const centerX = container.clientWidth / 2;
           const centerY = container.clientHeight / 2;
   
-          // Reset node positions
           nodes.forEach((n) => {
             delete n.fx;
             delete n.fy;
           });
   
-          // Center searched node
+          // Fix matched node to center
           firstNode.fx = centerX;
           firstNode.fy = centerY;
           firstNode.x = centerX;
           firstNode.y = centerY;
   
-          // Find connected node IDs
+          // Identify directly connected nodes
           const connectedIds = new Set<string>();
           links.forEach((link) => {
             const sourceId =
               typeof link.source === "string" ? link.source : link.source.id;
             const targetId =
               typeof link.target === "string" ? link.target : link.target.id;
-  
             if (sourceId === firstNode.id) connectedIds.add(targetId);
             else if (targetId === firstNode.id) connectedIds.add(sourceId);
           });
-  
           const connectedNodes = nodes.filter((n) => connectedIds.has(n.id));
   
-          // Distribute connected nodes around the searched node in a circle
-          const radius = 200;
+          // Place connected nodes in a ring around center
+          const connectionRadius = 150;
           const angleStep = (2 * Math.PI) / connectedNodes.length;
           connectedNodes.forEach((node, i) => {
             const angle = i * angleStep;
+            const x = centerX + connectionRadius * Math.cos(angle);
+            const y = centerY + connectionRadius * Math.sin(angle);
+            node.fx = x;
+            node.fy = y;
+            node.x = x;
+            node.y = y;
+          });
+  
+          // Unlinked nodes (not matched or connected)
+          const unlinkedNodes = nodes.filter(
+            (n) => n.id !== firstNode.id && !connectedIds.has(n.id)
+          );
+  
+          // Scatter unlinked nodes inside a filled circle
+          const discRadius = 600;
+          unlinkedNodes.forEach((node) => {
+            const angle = Math.random() * 2 * Math.PI;
+            const radius = Math.sqrt(Math.random()) * discRadius; // sqrt for uniform distribution
             const x = centerX + radius * Math.cos(angle);
             const y = centerY + radius * Math.sin(angle);
             node.fx = x;
@@ -231,11 +235,7 @@ import {
             node.y = y;
           });
   
-          // Update UI state
-          setFocusedNodeIds(matchedNodes.map((n) => n.id));
-          setSearchedNode(firstNode);
-          setSearchedConnectedNodeNames(connectedNodes.map((n) => n.name));
-  
+          // Highlight matched + connected nodes and links
           const highlightNodeIds = new Set<string>([
             firstNode.id,
             ...connectedIds,
@@ -255,10 +255,12 @@ import {
             }
           });
   
+          setFocusedNodeIds([firstNode.id]);
+          setSearchedNode(firstNode);
+          setSearchedConnectedNodeNames(connectedNodes.map((n) => n.name));
           setHighlightNodes(highlightNodeIds);
           setHighlightLinks(highlightLinkKeys);
   
-          // Animate zoom and pan
           fg.centerAt(centerX, centerY, 1000);
           fg.zoom(Math.max(2, minZoom), 1000);
           fg.d3ReheatSimulation();
@@ -276,6 +278,7 @@ import {
   
       const resetGraphToDefault = () => {
         scrollToTopVH();
+        actionCtx?.setSearch && actionCtx?.setSearch("");
         const fg = fgRef.current;
         if (!fg) return;
   
@@ -407,33 +410,6 @@ import {
         [focusedNodeIds, highlightNodes]
       );
   
-      function distributeInCenteredGrid(
-        nodes: CustomNode[],
-        containerWidth: number,
-        containerHeight: number,
-        nodeSpacing = 100 // adjust for tighter or looser spacing
-      ) {
-        const totalNodes = nodes.length;
-  
-        // Calculate max columns based on container width and spacing
-        const cols = Math.floor(containerWidth / nodeSpacing);
-        const rows = Math.ceil(totalNodes / cols);
-  
-        // Actual starting offsets to center grid
-        const offsetX = (containerWidth - cols * nodeSpacing) / 2;
-        const offsetY = (containerHeight - rows * nodeSpacing) / 2;
-  
-        nodes.forEach((node, i) => {
-          const col = i % cols;
-          const row = Math.floor(i / cols);
-  
-          node.fx = offsetX + col * nodeSpacing + nodeSpacing / 2;
-          node.fy = offsetY + row * nodeSpacing + nodeSpacing / 2;
-          node.x = node.fx;
-          node.y = node.fy;
-        });
-      }
-  
       useEffect(() => {
         const fg = fgRef.current;
         if (!fg || !width) return;
@@ -513,12 +489,12 @@ import {
           );
         });
       }, [highlightNodes, highlightLinks, focusedNodeIds]);
-  
       useEffect(() => {
         if (!showArrayConnections || !showOnlyForNames.length) return;
   
         const fg = fgRef.current;
-        if (!fg) return;
+        const container = fgContainerRef.current;
+        if (!fg || !container) return;
   
         const matchingNodes = nodes.filter((n) =>
           showOnlyForNames.includes(n.name)
@@ -526,7 +502,79 @@ import {
   
         if (matchingNodes.length === 0) return;
   
-        // Compute average center
+        const matchingIds = new Set(matchingNodes.map((n) => n.id));
+        const connectedLinks = new Set<string>();
+        const connectedNodeIds = new Set<string>();
+  
+        links.forEach((link) => {
+          const sourceId =
+            typeof link.source === "string" ? link.source : link.source.id;
+          const targetId =
+            typeof link.target === "string" ? link.target : link.target.id;
+          if (matchingIds.has(sourceId) || matchingIds.has(targetId)) {
+            connectedLinks.add(`${sourceId}-${targetId}`);
+            connectedNodeIds.add(sourceId);
+            connectedNodeIds.add(targetId);
+          }
+        });
+  
+        const allVisibleIds = new Set([...matchingIds, ...connectedNodeIds]);
+  
+        setHighlightNodes(allVisibleIds);
+        setHighlightLinks(connectedLinks);
+  
+        nodes.forEach((n) => {
+          const isFocused = allVisibleIds.has(n.id);
+          const targetOpacity = isFocused ? 1 : 0.1;
+          const targetRadius = isFocused ? nodeSize * 1.4 : nodeSize * 0.8;
+  
+          animateValue(
+            `r-${n.id}`,
+            animatedStyles.nodeRadii[n.id] ?? nodeSize,
+            targetRadius,
+            300,
+            (val) =>
+              setAnimatedStyles((prev) => ({
+                ...prev,
+                nodeRadii: { ...prev.nodeRadii, [n.id]: val },
+              }))
+          );
+  
+          animateValue(
+            `op-${n.id}`,
+            animatedStyles.nodeOpacities[n.id] ?? 1,
+            targetOpacity,
+            300,
+            (val) =>
+              setAnimatedStyles((prev) => ({
+                ...prev,
+                nodeOpacities: { ...prev.nodeOpacities, [n.id]: val },
+              }))
+          );
+        });
+  
+        links.forEach((link) => {
+          const sourceId =
+            typeof link.source === "string" ? link.source : link.source.id;
+          const targetId =
+            typeof link.target === "string" ? link.target : link.target.id;
+          const key = `${sourceId}-${targetId}`;
+          const shouldShow = connectedLinks.has(key);
+          const targetOpacity = shouldShow ? 1 : 0.05;
+  
+          animateValue(
+            `link-${key}`,
+            animatedStyles.linkOpacities[key] ?? 1,
+            targetOpacity,
+            300,
+            (val) =>
+              setAnimatedStyles((prev) => ({
+                ...prev,
+                linkOpacities: { ...prev.linkOpacities, [key]: val },
+              }))
+          );
+        });
+  
         const avgX =
           matchingNodes.reduce((sum, n) => sum + (n.x || 0), 0) /
           matchingNodes.length;
@@ -617,7 +665,7 @@ import {
               onBackgroundClick={resetGraphToDefault}
               ref={fgRef}
               graphData={graphData}
-              backgroundColor="#fff"
+              backgroundColor="transparent"
               linkColor={getLinkColor}
               linkWidth={getLinkWidth}
               cooldownTicks={120}
@@ -663,7 +711,8 @@ import {
               }}
               enableNodeDrag={false}
               onNodeHover={(node) => {
-                if (searchedNode || Number(width) <= 700) return;
+                if (searchedNode || Number(width) <= 700 || showArrayConnections)
+                  return;
                 if (Number(width) > 700) {
                   const n = node as GraphNode | null;
                   setHoveredNode(n);
@@ -723,7 +772,8 @@ import {
                 }
               }}
               onLinkHover={(link) => {
-                if (searchedNode || Number(width) <= 700) return;
+                if (searchedNode || Number(width) <= 700 || showArrayConnections)
+                  return;
                 if (Number(width) > 700) {
                   setHoveredLink(link as GraphLink | null);
                   if (!link) {
@@ -748,101 +798,110 @@ import {
                 }
               }}
               onNodeClick={(node) => {
-                  const clicked = node as GraphNode;
-                
-                  const connectedNodes: GraphNode[] = [];
-                  const connectedLinks: string[] = [];
-                  const connectedIds = new Set<string>();
-                
-                  // Find directly connected nodes
-                  links.forEach((link) => {
-                    const sourceId =
-                      typeof link.source === "string" ? link.source : link.source.id;
-                    const targetId =
-                      typeof link.target === "string" ? link.target : link.target.id;
-                
-                    if (sourceId === clicked.id || targetId === clicked.id) {
-                      const neighborId = sourceId === clicked.id ? targetId : sourceId;
-                      const neighbor = nodes.find((n) => n.id === neighborId);
-                      if (neighbor) {
-                        connectedNodes.push(neighbor);
-                        connectedLinks.push(`${sourceId}-${targetId}`);
-                        connectedIds.add(neighbor.id);
-                      }
+                const clicked = node as GraphNode;
+  
+                const connectedNodes: GraphNode[] = [];
+                const connectedLinks: string[] = [];
+                const connectedIds = new Set<string>();
+  
+                // Find directly connected nodes
+                links.forEach((link) => {
+                  const sourceId =
+                    typeof link.source === "string"
+                      ? link.source
+                      : link.source.id;
+                  const targetId =
+                    typeof link.target === "string"
+                      ? link.target
+                      : link.target.id;
+  
+                  if (sourceId === clicked.id || targetId === clicked.id) {
+                    const neighborId =
+                      sourceId === clicked.id ? targetId : sourceId;
+                    const neighbor = nodes.find((n) => n.id === neighborId);
+                    if (neighbor) {
+                      connectedNodes.push(neighbor);
+                      connectedLinks.push(`${sourceId}-${targetId}`);
+                      connectedIds.add(neighbor.id);
                     }
-                  });
-                
-                  connectedIds.add(clicked.id);
-                
-                  // Update UI highlights
-                  setFocusedNodeIds([clicked.id]);
-                  setHighlightNodes(connectedIds);
-                  setHighlightLinks(new Set(connectedLinks));
-                  setSearchedNode(clicked);
-                  setSearchedConnectedNodeNames(connectedNodes.map((n) => n.name));
-                
-                  // Animate opacity and size for all nodes
-                  nodes.forEach((n) => {
-                    const isFocused = connectedIds.has(n.id);
-                    const targetOpacity = isFocused ? 1 : 0.1;
-                    const targetRadius = isFocused
-                      ? n.id === clicked.id
-                        ? nodeSize * 2.2
-                        : nodeSize * 1.4
-                      : nodeSize * 0.8;
-                
-                    animateValue(
-                      `r-${n.id}`,
-                      animatedStyles.nodeRadii[n.id] ?? nodeSize,
-                      targetRadius,
-                      300,
-                      (val) =>
-                        setAnimatedStyles((prev) => ({
-                          ...prev,
-                          nodeRadii: { ...prev.nodeRadii, [n.id]: val },
-                        }))
-                    );
-                
-                    animateValue(
-                      `op-${n.id}`,
-                      animatedStyles.nodeOpacities[n.id] ?? 1,
-                      targetOpacity,
-                      300,
-                      (val) =>
-                        setAnimatedStyles((prev) => ({
-                          ...prev,
-                          nodeOpacities: { ...prev.nodeOpacities, [n.id]: val },
-                        }))
-                    );
-                  });
-                
-                  // Animate opacity for all links
-                  links.forEach((link) => {
-                    const sourceId =
-                      typeof link.source === "string" ? link.source : link.source.id;
-                    const targetId =
-                      typeof link.target === "string" ? link.target : link.target.id;
-                    const key = `${sourceId}-${targetId}`;
-                
-                    const shouldShow = connectedIds.has(sourceId) && connectedIds.has(targetId);
-                    const targetOpacity = shouldShow ? 1 : 0.05;
-                
-                    animateValue(
-                      `link-${key}`,
-                      animatedStyles.linkOpacities[key] ?? 1,
-                      targetOpacity,
-                      300,
-                      (val) =>
-                        setAnimatedStyles((prev) => ({
-                          ...prev,
-                          linkOpacities: { ...prev.linkOpacities, [key]: val },
-                        }))
-                    );
-                  });
-                
-                  if (onNodeClick) onNodeClick(clicked);
-                }}
-                
+                  }
+                });
+  
+                connectedIds.add(clicked.id);
+  
+                // Update UI highlights
+                setFocusedNodeIds([clicked.id]);
+                setHighlightNodes(connectedIds);
+                setHighlightLinks(new Set(connectedLinks));
+                setSearchedNode(clicked);
+                setSearchedConnectedNodeNames(connectedNodes.map((n) => n.name));
+  
+                // Animate opacity and size for all nodes
+                nodes.forEach((n) => {
+                  const isFocused = connectedIds.has(n.id);
+                  const targetOpacity = isFocused ? 1 : 0.1;
+                  const targetRadius = isFocused
+                    ? n.id === clicked.id
+                      ? nodeSize * 2.2
+                      : nodeSize * 1.4
+                    : nodeSize * 0.8;
+  
+                  animateValue(
+                    `r-${n.id}`,
+                    animatedStyles.nodeRadii[n.id] ?? nodeSize,
+                    targetRadius,
+                    300,
+                    (val) =>
+                      setAnimatedStyles((prev) => ({
+                        ...prev,
+                        nodeRadii: { ...prev.nodeRadii, [n.id]: val },
+                      }))
+                  );
+  
+                  animateValue(
+                    `op-${n.id}`,
+                    animatedStyles.nodeOpacities[n.id] ?? 1,
+                    targetOpacity,
+                    300,
+                    (val) =>
+                      setAnimatedStyles((prev) => ({
+                        ...prev,
+                        nodeOpacities: { ...prev.nodeOpacities, [n.id]: val },
+                      }))
+                  );
+                });
+  
+                // Animate opacity for all links
+                links.forEach((link) => {
+                  const sourceId =
+                    typeof link.source === "string"
+                      ? link.source
+                      : link.source.id;
+                  const targetId =
+                    typeof link.target === "string"
+                      ? link.target
+                      : link.target.id;
+                  const key = `${sourceId}-${targetId}`;
+  
+                  const shouldShow =
+                    connectedIds.has(sourceId) && connectedIds.has(targetId);
+                  const targetOpacity = shouldShow ? 1 : 0.05;
+  
+                  animateValue(
+                    `link-${key}`,
+                    animatedStyles.linkOpacities[key] ?? 1,
+                    targetOpacity,
+                    300,
+                    (val) =>
+                      setAnimatedStyles((prev) => ({
+                        ...prev,
+                        linkOpacities: { ...prev.linkOpacities, [key]: val },
+                      }))
+                  );
+                });
+  
+                if (onNodeClick) onNodeClick(clicked);
+              }}
               nodeRelSize={nodeSize}
             />
           </div>

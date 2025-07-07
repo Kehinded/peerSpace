@@ -17,6 +17,8 @@ interface ActionContextInterface {
   setLogoutModal: (param?: any) => void;
   ShowMobile: boolean;
   setShowMobile: (param?: any) => void;
+  search: string;
+  setSearch: (param: string) => void;
 }
 
 const ActionContext = createContext<ActionContextInterface>({
@@ -33,6 +35,8 @@ const ActionContext = createContext<ActionContextInterface>({
   setLogoutModal: () => {},
   ShowMobile: false,
   setShowMobile: () => {},
+  search: "",
+  setSearch: () => {},
 });
 
 export function ActionContextProvider(props?: any) {
@@ -71,6 +75,11 @@ export function ActionContextProvider(props?: any) {
     setMobileVal(!MobileVal);
   }
 
+  const [search, setSearch] = useState("");
+  const setSearchFunc = (param: string) => {
+    setSearch(param);
+  };
+
   const context = {
     setSideNavCollapsed: setSideNavCollapsedFunc,
     sideNavCollapsed: sideNaveCollapse,
@@ -82,6 +91,8 @@ export function ActionContextProvider(props?: any) {
     setLogoutModal: logoutModalChange,
     ShowMobile: MobileVal,
     setShowMobile: SetMobivalFunc,
+    search: search,
+    setSearch: setSearchFunc,
   };
 
   return (
