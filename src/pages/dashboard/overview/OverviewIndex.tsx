@@ -1,16 +1,26 @@
-import React, { useContext, useEffect, useRef } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import DashboardLayout from "../../../components/layout/dashboard/DashboardLayout";
 import "../../../styles/dashboard/overview/OverviewIndex.css";
 import { RazorInputField } from "@kehinded/razor-ui";
 import ProfileCardComp from "../../../components/fragments/ProfileCardComp";
 import MetricsEducationComp from "../../../components/fragments/MetricsEducationComp";
 import PeopleGraph, {
+  type GraphLink,
+  type GraphNode,
   type PeopleGraphHandle,
 } from "../../../components/fragments/NodeMapComp";
-import { links, nodes, userName } from "../../../utils/NodeData";
+import {
+  computeFollowers,
+  createAdjMap,
+  defaultNames,
+  generateSparseLinks,
+  generateTempNodes,
+  userName,
+} from "../../../utils/NodeData";
 import ActionContext from "../../../context/ActionContext";
 import { scrollToTopVH } from "../../../helper/helper";
 import { FaFilter, FaInfoCircle, FaSearch, FaSwift } from "react-icons/fa";
+import { decrypt2 } from "../../../utils/encrypt";
 
 const OverviewIndex = () => {
   const actionCtx = useContext(ActionContext);
@@ -60,6 +70,44 @@ const OverviewIndex = () => {
     input?.focus();
   };
 
+  const getUserName = () => {
+    const userDetails = localStorage?.getItem("kractos")
+      ? decrypt2(localStorage?.getItem("kractos"))
+      : {};
+    const name = `${userDetails?.first_name} ${userDetails?.last_name}`;
+    return name;
+  };
+
+  const [graphData, setGraphData] = useState<{
+    nodes: GraphNode[];
+    links: GraphLink[];
+  }>({ nodes: [], links: [] });
+
+  useEffect(() => {
+    const rawUser = localStorage.getItem("kractos");
+    if (!rawUser) return;
+
+    const userDetails = decrypt2(rawUser);
+    const userName = `${userDetails.first_name} ${userDetails.last_name}`;
+    const names = [...defaultNames, userName];
+
+    const tempNodes = generateTempNodes(names); // you must move your logic into a reusable function
+    const links = generateSparseLinks(tempNodes);
+    const adjMap = createAdjMap(links);
+
+    const nodesWithFollowers = tempNodes.map((node) => {
+      const peers = adjMap[node.id]?.size ?? 0;
+      const followers = computeFollowers(node.id, adjMap).size;
+      return {
+        ...node,
+        noOfPeers: peers,
+        noOfFollowers: peers + followers,
+      };
+    });
+
+    setGraphData({ nodes: nodesWithFollowers, links });
+  }, []);
+
   useEffect(() => {
     handleSearch(actionCtx?.search);
   }, [actionCtx?.search]);
@@ -67,7 +115,12 @@ const OverviewIndex = () => {
   return (
     <>
       <DashboardLayout>
-        <div className="overview-peer-index-wrap-box">
+        <div
+          onClick={() => {
+            console.log(getUserName());
+          }}
+          className="overview-peer-index-wrap-box"
+        >
           {/* search filter box start */}
           <div className="search-flter-box-wrap">
             {/* search here start */}
@@ -147,12 +200,12 @@ const OverviewIndex = () => {
                     }
                   }}
                   ref={graphRef}
-                  nodes={nodes}
-                  links={links}
+                  nodes={graphData?.nodes}
+                  links={graphData?.links}
                   key={`fdfghk`}
                   muteConnections={!actionCtx?.connections?.connection}
                   showArrayConnections={actionCtx?.connections?.connection_map}
-                  showOnlyForNames={[userName]}
+                  showOnlyForNames={[getUserName()]}
                 />
                 {/* icons-bow-wrapper start */}
                 <div className="icons-wrapper-box">

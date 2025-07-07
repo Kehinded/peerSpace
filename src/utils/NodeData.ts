@@ -10,7 +10,9 @@ import img2 from "../assets/images/smiling-young-man-illustration_1308-174669.av
 import img3 from "../assets/images/beautiful-woman-avatar-character-icon-free-vector.jpg";
 import img4 from "../assets/images/beautiful-blonde-woman-with-makeup-avatar-for-a-beauty-salon-illustration-in-the-cartoon-style-vector.jpg";
 
-const userDetails = localStorage?.getItem("kractos") ? decrypt2(localStorage?.getItem("kractos")) : null;
+const userDetails = localStorage?.getItem("kractos")
+  ? decrypt2(localStorage?.getItem("kractos"))
+  : null;
 import type { GraphLink, GraphNode } from "../components/fragments/NodeMapComp";
 import { decrypt2 } from "./encrypt";
 
@@ -77,7 +79,7 @@ export const userName = `${userDetails?.first_name} ${userDetails?.last_name}`;
 
 const addToNamesList = (list: string[]): string[] => {
   if (Number(list?.length) > 0) {
-    if ( userDetails && Object?.keys(userDetails)?.length > 0) {
+    if (userDetails && Object?.keys(userDetails)?.length > 0) {
       const newList = [...list, userName];
       return newList;
     } else {
@@ -87,7 +89,8 @@ const addToNamesList = (list: string[]): string[] => {
     return [];
   }
 };
-const defaultNames = [
+
+export const defaultNames = [
   "Ada Lovelace",
   "Alan Turing",
   "Grace Hopper",
@@ -229,7 +232,7 @@ function randomDate(startYear = 2000, endYear = 2015) {
   };
 }
 
-const tempNodes: GraphNode[] = names.map((name, i) => {
+export const tempNodes: GraphNode[] = names.map((name, i) => {
   const designation =
     designations[Math.floor(Math.random() * designations.length)];
   const university =
@@ -257,10 +260,40 @@ const tempNodes: GraphNode[] = names.map((name, i) => {
   };
 });
 
+export function generateTempNodes(names: string[]): GraphNode[] {
+  return names.map((name, i) => {
+    const designation =
+      designations[Math.floor(Math.random() * designations.length)];
+    const university =
+      universities[Math.floor(Math.random() * universities.length)];
+    const dates = randomDate();
+
+    return {
+      id: (i + 1).toString(),
+      name,
+      img: imagesArray[i % imagesArray.length],
+      group: groups[i % groups.length],
+      address: addresses[Math.floor(Math.random() * addresses.length)],
+      designation: designation.title,
+      designationDescription: designation.desc,
+      university: {
+        schoolName: university.school,
+        degree: university.degree,
+        startDate: dates.startDate,
+        endDate: dates.endDate,
+      },
+      noOfPeers: 0,
+      noOfFollowers: 0,
+      patientsServed: Math.floor(Math.random() * 9000) + 1000,
+      successRate: parseFloat((85 + Math.random() * 15).toFixed(1)),
+    };
+  });
+}
+
 export const links: GraphLink[] = generateSparseLinks(tempNodes);
 
 // Create adjacency map
-const adjMap: Record<string, Set<string>> = {};
+export const adjMap: Record<string, Set<string>> = {};
 links.forEach(({ source, target }) => {
   const s = typeof source === "string" ? source : source.id;
   const t = typeof target === "string" ? target : target.id;
@@ -270,8 +303,28 @@ links.forEach(({ source, target }) => {
   adjMap[t].add(s);
 });
 
+export function createAdjMap(links: GraphLink[]): Record<string, Set<string>> {
+  const map: Record<string, Set<string>> = {};
+
+  links.forEach(({ source, target }) => {
+    const s = typeof source === "string" ? source : source.id;
+    const t = typeof target === "string" ? target : target.id;
+
+    if (!map[s]) map[s] = new Set();
+    if (!map[t]) map[t] = new Set();
+
+    map[s].add(t);
+    map[t].add(s);
+  });
+
+  return map;
+}
+
 // BFS to compute followers
-function computeFollowers(startId: string): Set<string> {
+export function computeFollowers(
+  startId: string,
+  adjMap: Record<string, Set<string>>
+): Set<string> {
   const visited = new Set<string>();
   const queue = [startId];
   while (queue.length) {
@@ -289,7 +342,8 @@ function computeFollowers(startId: string): Set<string> {
 
 export const nodes: GraphNode[] = tempNodes.map((node) => {
   const peers = adjMap[node.id]?.size ?? 0;
-  const followers = computeFollowers(node.id).size;
+  const followers = computeFollowers(node.id, adjMap).size;
+
   return {
     ...node,
     noOfPeers: peers,
