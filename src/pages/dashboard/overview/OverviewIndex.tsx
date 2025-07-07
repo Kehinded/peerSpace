@@ -60,9 +60,11 @@ const OverviewIndex = () => {
 
   const handleReset = () => {
     graphRef.current?.resetGraphToDefault();
+    scrollToTopVH();
   };
 
   const focusSearchInput = () => {
+    scrollToTopVH();
     const input = document.getElementById(
       "search-input-peer"
     ) as HTMLInputElement | null;
