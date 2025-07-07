@@ -1,6 +1,9 @@
 .dashboard-peer-index-wrap {
   overflow-y: scroll;
 }
+.dashboard-peer-index-wrap::-webkit-scrollbar {
+  display: none;
+}
 .dashboard-peer-index-wrap .side-menu-wrapper-box {
   padding-top: unset !important;
   padding: 1rem !important;
@@ -11,6 +14,9 @@
 }
 .dashboard-peer-index-wrap .main-header-wrapper-content-box {
   overflow-y: scroll;
+}
+.dashboard-peer-index-wrap .main-header-wrapper-content-box::-webkit-scrollbar {
+  display: none;
 }
 .dashboard-peer-index-wrap .main-header-wrapper-content-box .header-nav-box-wrapper {
   align-items: stretch !important;
@@ -37,4 +43,7 @@
   flex: unset !important;
   display: flex;
   flex-direction: column;
+}
+.dashboard-peer-index-wrap .main-header-wrapper-content-box .main-content-wrapper::-webkit-scrollbar {
+  display: none;
 }/*# sourceMappingURL=DashboardLayout.css.map */

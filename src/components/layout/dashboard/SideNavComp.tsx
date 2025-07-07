@@ -29,24 +29,24 @@ const SideNavComp = () => {
       icon_two: ALL_ICONS?.sidemenu_profile_active,
       link: ROUTE_PATH?.PROFILE,
     },
-    {
-      name: "support",
-      icon: ALL_ICONS?.sidemenu_message,
-      icon_two: ALL_ICONS?.sidemenu_message_active,
-      //   link: ROUTE_PATH?.OVERVIEW,
-    },
-    {
-      name: "Bookings",
-      icon: ALL_ICONS?.sidemenu_book,
-      icon_two: ALL_ICONS?.sidemenu_book_active,
-      //   link: ROUTE_PATH?.OVERVIEW,
-    },
-    {
-      name: "Calendar",
-      icon: ALL_ICONS?.sidemenu_calendar,
-      icon_two: ALL_ICONS?.sidemenu_calendar_active,
-      //   link: ROUTE_PATH?.OVERVIEW,
-    },
+    // {
+    //   name: "support",
+    //   icon: ALL_ICONS?.sidemenu_message,
+    //   icon_two: ALL_ICONS?.sidemenu_message_active,
+    //   //   link: ROUTE_PATH?.OVERVIEW,
+    // },
+    // {
+    //   name: "Bookings",
+    //   icon: ALL_ICONS?.sidemenu_book,
+    //   icon_two: ALL_ICONS?.sidemenu_book_active,
+    //   //   link: ROUTE_PATH?.OVERVIEW,
+    // },
+    // {
+    //   name: "Calendar",
+    //   icon: ALL_ICONS?.sidemenu_calendar,
+    //   icon_two: ALL_ICONS?.sidemenu_calendar_active,
+    //   //   link: ROUTE_PATH?.OVERVIEW,
+    // },
     {
       name: "Location",
       icon: ALL_ICONS?.sidemenu_location,

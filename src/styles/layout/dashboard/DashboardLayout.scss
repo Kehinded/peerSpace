@@ -1,6 +1,11 @@
 .dashboard-peer-index-wrap {
   //   background-color: #fafafa !important;
   overflow-y: scroll;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
   .side-menu-wrapper-box {
     padding-top: unset !important;
     padding: 1rem !important;
@@ -14,6 +19,10 @@
   .main-header-wrapper-content-box {
     overflow-y: scroll;
     // background-color: #FAFAFA;
+
+    &::-webkit-scrollbar {
+        display: none;
+      }
 
     .header-nav-box-wrapper {
       align-items: stretch !important;
@@ -42,6 +51,10 @@
       flex: unset !important;
       display: flex;
       flex-direction: column;
+
+      &::-webkit-scrollbar {
+        display: none;
+      }
     }
   }
 }

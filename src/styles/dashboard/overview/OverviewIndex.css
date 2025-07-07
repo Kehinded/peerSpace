@@ -72,6 +72,9 @@
   overflow-y: scroll;
   display: flex;
 }
+.overview-peer-index-wrap-box .down-profile-content-box-wrap .content-two-box-wrap::-webkit-scrollbar {
+  display: none;
+}
 @media only screen and (max-width: 75em) {
   .overview-peer-index-wrap-box .down-profile-content-box-wrap .content-two-box-wrap {
     flex-direction: column;
@@ -369,6 +372,9 @@
   border-radius: 1.2rem;
   background-color: #fff;
 }
+.overview-peer-index-wrap-box .down-profile-content-box-wrap .content-two-box-wrap .map-container-wrapper::-webkit-scrollbar {
+  display: none;
+}
 @media only screen and (max-width: 75em) {
   .overview-peer-index-wrap-box .down-profile-content-box-wrap .content-two-box-wrap .map-container-wrapper {
     flex: unset;
@@ -380,6 +386,12 @@
   top: 0%;
   left: 0%;
   background: linear-gradient(to right, #ffffff, #f5f8fd, #eef3fa);
+}
+.overview-peer-index-wrap-box .down-profile-content-box-wrap .content-two-box-wrap .map-container-wrapper > *::-webkit-scrollbar {
+  display: none;
+}
+.overview-peer-index-wrap-box .down-profile-content-box-wrap .content-two-box-wrap .map-container-wrapper > * > *::-webkit-scrollbar {
+  display: none;
 }
 .overview-peer-index-wrap-box .down-profile-content-box-wrap .content-two-box-wrap .map-container-wrapper .icons-wrapper-box {
   position: absolute;

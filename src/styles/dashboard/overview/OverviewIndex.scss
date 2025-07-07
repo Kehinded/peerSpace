@@ -76,6 +76,10 @@
       overflow-y: scroll;
       display: flex;
 
+      &::-webkit-scrollbar {
+        display: none;
+      }
+
       @media only screen and (max-width: 75em) {
         flex-direction: column;
         gap: 2rem;
@@ -424,6 +428,10 @@
         border-radius: 1.2rem;
         background-color: #fff;
 
+        &::-webkit-scrollbar {
+          display: none;
+        }
+
         @media only screen and (max-width: 75em) {
           flex: unset;
           height: calc(100vh - 25rem);
@@ -435,6 +443,16 @@
           left: 0%;
           background: linear-gradient(to right, #ffffff, #f5f8fd, #eef3fa);
           //   background: linear-gradient(to right, #ffffff, #f0f4fb, #dde7f8);
+
+          &::-webkit-scrollbar {
+            display: none;
+          }
+
+          & > * {
+            &::-webkit-scrollbar {
+              display: none;
+            }
+          }
         }
 
         .icons-wrapper-box {
