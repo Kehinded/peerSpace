@@ -190,7 +190,7 @@ const OverviewIndex = () => {
               <div className="map-container-wrapper">
                 <PeopleGraph
                   onNodeClick={(param) => {
-                    // console.log(param);
+                    scrollToTopVH();
                     actionCtx?.setSingleNodeinfo &&
                       actionCtx?.setSingleNodeinfo([param]);
                     // if (actionCtx?.search) {
