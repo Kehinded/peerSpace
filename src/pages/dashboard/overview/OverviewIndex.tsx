@@ -193,9 +193,9 @@ const OverviewIndex = () => {
                     // console.log(param);
                     actionCtx?.setSingleNodeinfo &&
                       actionCtx?.setSingleNodeinfo([param]);
-                    if (actionCtx?.search) {
-                      actionCtx?.setSearch && actionCtx?.setSearch("");
-                    }
+                    // if (actionCtx?.search) {
+                    //   actionCtx?.setSearch && actionCtx?.setSearch("");
+                    // }
                   }}
                   onNodeHover={(param) => {
                     // console.log(param);
