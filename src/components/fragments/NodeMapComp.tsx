@@ -8,6 +8,7 @@ import {
   useContext,
   useMemo,
   useCallback,
+  useLayoutEffect,
 } from "react";
 import ForceGraph2D from "react-force-graph-2d";
 import type {
@@ -566,6 +567,41 @@ const PeopleGraph = forwardRef<PeopleGraphHandle, Props>(
       [nodes, links, animatedStyles, onNodeClick]
     );
 
+    const [containerSize, setContainerSize] = useState({ width: 0, height: 0 });
+
+    useLayoutEffect(() => {
+        const container = fgContainerRef.current;
+        if (!container) return;
+      
+        const resizeObserver = new ResizeObserver(() => {
+          const width = container.clientWidth;
+          const height = container.clientHeight;
+      
+          setContainerSize({ width, height });
+      
+          // 👇 Keep searched node centered on resize
+          if (fgRef.current && searchedNode) {
+            fgRef.current.centerAt(width / 2, height / 2, 600);
+          }
+        });
+      
+        resizeObserver.observe(container);
+      
+        // Initial trigger
+        const width = container.clientWidth;
+        const height = container.clientHeight;
+        setContainerSize({ width, height });
+      
+        if (fgRef.current && searchedNode) {
+          fgRef.current.centerAt(width / 2, height / 2, 600);
+        }
+      
+        return () => {
+          resizeObserver.disconnect();
+        };
+      }, [searchedNode]); // 👈 Add `searchedNode` to the dependency array
+      
+
     useEffect(() => {
       const container = fgContainerRef.current;
       if (!container) return;
@@ -855,6 +891,8 @@ const PeopleGraph = forwardRef<PeopleGraphHandle, Props>(
           }}
         >
           <ForceGraph2D
+            width={containerSize.width}
+            height={containerSize.height}
             nodePointerAreaPaint={renderPointerPaint}
             onBackgroundClick={resetGraphToDefault}
             ref={fgRef}
