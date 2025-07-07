@@ -97,6 +97,7 @@ const Loginindex = () => {
                   name="first_name"
                   onChange={handleChange}
                   value={details?.first_name}
+                  capitalize
                 />
                 <RazorInputField
                   label="Last Name"
@@ -117,6 +118,7 @@ const Loginindex = () => {
                 name="designation"
                 onChange={handleChange}
                 value={details?.designation}
+                capitalize
               />
 
               <RazorInputField

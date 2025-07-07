@@ -70,6 +70,7 @@
 .header-nav-peer-index-wrap .profile-wrap-box .profile-wrap .name-des-box .name {
   font-size: 1.5rem;
   font-weight: 500;
+  text-transform: capitalize;
 }
 .header-nav-peer-index-wrap .profile-wrap-box .profile-wrap .name-des-box .des {
   color: #a9adb2;
