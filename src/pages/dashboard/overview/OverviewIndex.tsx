@@ -108,6 +108,18 @@ const OverviewIndex = () => {
   }, []);
 
   useEffect(() => {
+    if (actionCtx?.connections?.connection_map) {
+      const rawUser = localStorage.getItem("kractos");
+      const userDetails = decrypt2(rawUser);
+      const userName = `${userDetails.first_name} ${userDetails.last_name}`;
+      const obj = graphData?.nodes?.find((ch) => ch?.name === userName);
+      actionCtx?.setSingleNodeinfo && actionCtx?.setSingleNodeinfo([obj]);
+    } else {
+      actionCtx?.setSingleNodeinfo && actionCtx?.setSingleNodeinfo([]);
+    }
+  }, [actionCtx?.connections]);
+
+  useEffect(() => {
     handleSearch(actionCtx?.search);
   }, [actionCtx?.search]);
 
