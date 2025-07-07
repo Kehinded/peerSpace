@@ -2,7 +2,11 @@ import { useContext } from "react";
 import "../../../styles/layout/dashboard/SideNavComp.css";
 import { ALL_ICONS } from "../../../assets/AllIcons";
 import ActionContext from "../../../context/ActionContext";
-import { RazorMenuFragment, RazorToolTip } from "@kehinded/razor-ui";
+import {
+  RazorMenuFragment,
+  RazorToggleSlide,
+  RazorToolTip,
+} from "@kehinded/razor-ui";
 import { ROUTE_PATH } from "../../../routes/RouteList";
 import { useLocation, useNavigate } from "react-router-dom";
 import { colorToRgba } from "../../../helper/helper";
@@ -75,6 +79,19 @@ const SideNavComp = () => {
     },
   ];
 
+  const connectionList = [
+    {
+      text: "Show connection",
+      value: actionCtx?.connections?.connection,
+      key_name: "connection",
+    },
+    {
+      text: "Show my connection on map",
+      value: actionCtx?.connections?.connection_map,
+      key_name: "connection_map",
+    },
+  ];
+
   return (
     <div className="side-menu-nav-dashboard-index">
       <div
@@ -126,6 +143,7 @@ const SideNavComp = () => {
               onClick={() => {
                 if (chi?.link) {
                   navigate(chi?.link);
+                  actionCtx?.setShowMobile && actionCtx?.setShowMobile();
                 }
               }}
               active={location?.pathname?.includes(chi?.link as string)}
@@ -140,6 +158,35 @@ const SideNavComp = () => {
         })}
       </div>
       {/* sidemenu list box end */}
+      {/* mobile switch connections start */}
+      <div className="mobile-switch-connection-box">
+        {/* connect wrap start */}
+        <div className="connection-wrap-box">
+          {connectionList?.map((chi, idx) => {
+            return (
+              <div key={idx} className="toggle-text-box">
+                <div className="toggle-peer">
+                  <RazorToggleSlide
+                    key={`${idx}-${chi?.text}`}
+                    id={`${idx}-${chi?.text}`}
+                    onChange={() => {
+                      actionCtx?.setConnections &&
+                        actionCtx?.setConnections(chi?.key_name, !chi?.value);
+                      actionCtx?.setSearch && actionCtx?.setSearch("");
+                      actionCtx?.setShowMobile && actionCtx?.setShowMobile();
+                    }}
+                    checked={chi?.value}
+                    color={`black-light`}
+                  />
+                </div>
+                <p className="text">{chi?.text}</p>
+              </div>
+            );
+          })}
+        </div>
+        {/* connect wrap end */}
+      </div>
+      {/* mobile switch connections end */}
       {/* logout box here */}
       <div className="logout-box">
         <RazorMenuFragment

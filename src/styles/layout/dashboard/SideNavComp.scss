@@ -85,6 +85,41 @@
     }
   }
 
+  .mobile-switch-connection-box {
+    width: 100%;
+    margin: auto 0rem;
+    padding: 1rem;
+    @media only screen and (min-width: 42em) {
+      display: none;
+    }
+    .connection-wrap-box {
+      width: max-content;
+      display: flex;
+      flex-direction: column;
+      gap: 0.7rem;
+      width: 100%;
+      background: linear-gradient(to bottom, #f7faff, #edf3fb);
+      border-radius: 1.2rem;
+      padding: 1rem;
+
+      .toggle-text-box {
+        display: flex;
+        align-items: center;
+
+        .toggle-peer {
+          transform: scale(0.65);
+          // display: none;
+        }
+
+        .text {
+          font-size: 1.2rem;
+          //   text-wrap: nowrap;
+          color: #a9adb2;
+        }
+      }
+    }
+  }
+
   .sidemenu-box-list-wrap {
     display: flex;
     flex-direction: column;
