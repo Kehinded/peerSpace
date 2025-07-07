@@ -34,6 +34,7 @@ const OverviewIndex = () => {
       name: "Reset",
       onClick: () => {
         handleReset();
+        scrollToTopVH();
       },
       icon: <FaSwift className="icon" />,
     },
