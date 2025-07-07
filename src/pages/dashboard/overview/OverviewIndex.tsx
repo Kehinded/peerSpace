@@ -1,27 +1,19 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef } from "react";
 import DashboardLayout from "../../../components/layout/dashboard/DashboardLayout";
 import "../../../styles/dashboard/overview/OverviewIndex.css";
 import { RazorInputField } from "@kehinded/razor-ui";
 import ProfileCardComp from "../../../components/fragments/ProfileCardComp";
 import MetricsEducationComp from "../../../components/fragments/MetricsEducationComp";
 import PeopleGraph, {
-  type GraphLink,
-  type GraphNode,
   type PeopleGraphHandle,
 } from "../../../components/fragments/NodeMapComp";
-import {
-  computeFollowers,
-  createAdjMap,
-  defaultNames,
-  generateSparseLinks,
-  generateTempNodes,
-} from "../../../utils/NodeData";
 import ActionContext from "../../../context/ActionContext";
 import { scrollToTopVH } from "../../../helper/helper";
 import { FaFilter, FaInfoCircle, FaSearch, FaSwift } from "react-icons/fa";
 import { decrypt2 } from "../../../utils/encrypt";
 
 const OverviewIndex = () => {
+  // const [profile, se]
   const actionCtx = useContext(ActionContext);
   const graphRef = useRef<PeopleGraphHandle>(null);
 
@@ -79,42 +71,12 @@ const OverviewIndex = () => {
     return name;
   };
 
-  const [graphData, setGraphData] = useState<{
-    nodes: GraphNode[];
-    links: GraphLink[];
-  }>({ nodes: [], links: [] });
-
-  useEffect(() => {
-    const rawUser = localStorage.getItem("kractos");
-    if (!rawUser) return;
-
-    const userDetails = decrypt2(rawUser);
-    const userName = `${userDetails.first_name} ${userDetails.last_name}`;
-    const names = [...defaultNames, userName];
-
-    const tempNodes = generateTempNodes(names); // you must move your logic into a reusable function
-    const links = generateSparseLinks(tempNodes);
-    const adjMap = createAdjMap(links);
-
-    const nodesWithFollowers = tempNodes.map((node) => {
-      const peers = adjMap[node.id]?.size ?? 0;
-      const followers = computeFollowers(node.id, adjMap).size;
-      return {
-        ...node,
-        noOfPeers: peers,
-        noOfFollowers: peers + followers,
-      };
-    });
-
-    setGraphData({ nodes: nodesWithFollowers, links });
-  }, []);
-
   useEffect(() => {
     if (actionCtx?.connections?.connection_map) {
-      const rawUser = localStorage.getItem("kractos");
-      const userDetails = decrypt2(rawUser);
-      const userName = `${userDetails.first_name} ${userDetails.last_name}`;
-      const obj = graphData?.nodes?.find((ch) => ch?.name === userName);
+      const userName = getUserName();
+      const obj = actionCtx?.graphData?.nodes?.find(
+        (ch) => ch?.name === userName
+      );
       actionCtx?.setSingleNodeinfo && actionCtx?.setSingleNodeinfo([obj]);
     } else {
       actionCtx?.setSingleNodeinfo && actionCtx?.setSingleNodeinfo([]);
@@ -208,8 +170,8 @@ const OverviewIndex = () => {
                     }
                   }}
                   ref={graphRef}
-                  nodes={graphData?.nodes}
-                  links={graphData?.links}
+                  nodes={actionCtx?.graphData?.nodes}
+                  links={actionCtx?.graphData?.links}
                   key={`fdfghk`}
                   muteConnections={!actionCtx?.connections?.connection}
                   showArrayConnections={actionCtx?.connections?.connection_map}

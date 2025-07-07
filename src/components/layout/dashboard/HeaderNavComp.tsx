@@ -26,13 +26,36 @@ const HeaderNavComp = () => {
     },
   ];
 
+  const getUserName = () => {
+    const userDetails = localStorage?.getItem("kractos")
+      ? decrypt2(localStorage?.getItem("kractos"))
+      : {};
+    const name = `${userDetails?.first_name} ${userDetails?.last_name}`;
+    return name;
+  };
+
+  const getProFileDetails = () => {
+    if (actionCtx?.graphData?.nodes?.length > 0) {
+      const details = actionCtx?.graphData?.nodes?.find(
+        (ch) => ch?.name === getUserName()
+      );
+      return details;
+    }
+  };
+
   return (
-    <div className="header-nav-peer-index-wrap">
+    <div
+   
+      className="header-nav-peer-index-wrap"
+    >
       {/* profile wrap start */}
       <div className="profile-wrap-box">
         {/* profile wrap start */}
         <div className="profile-wrap">
-          <div className="avatar-box"></div>
+          <div
+            style={{ backgroundImage: `url(${getProFileDetails()?.img})` }}
+            className="avatar-box"
+          ></div>
           <div className="name-des-box">
             <p className="name">
               {RazorTextTrim(

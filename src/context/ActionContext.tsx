@@ -1,5 +1,6 @@
 import { createContext, useState } from "react";
 import type { nodeProps } from "../@types/data";
+import type { GraphLink, GraphNode } from "../components/fragments/NodeMapComp";
 
 type connectionProps = {
   connection: boolean;
@@ -19,6 +20,11 @@ interface ActionContextInterface {
   setShowMobile: (param?: any) => void;
   search: string;
   setSearch: (param: string) => void;
+  graphData: {
+    nodes: GraphNode[];
+    links: GraphLink[];
+  };
+  setGraphData: (param?: any) => void;
 }
 
 const ActionContext = createContext<ActionContextInterface>({
@@ -37,6 +43,11 @@ const ActionContext = createContext<ActionContextInterface>({
   setShowMobile: () => {},
   search: "",
   setSearch: () => {},
+  graphData: {
+    nodes: [],
+    links: [],
+  },
+  setGraphData: () => {},
 });
 
 export function ActionContextProvider(props?: any) {
@@ -80,6 +91,14 @@ export function ActionContextProvider(props?: any) {
     setSearch(param);
   };
 
+  const [graphData, setGraphData] = useState<{
+    nodes: GraphNode[];
+    links: GraphLink[];
+  }>({ nodes: [], links: [] });
+  const setgraphDataFunc = (param: any) => {
+    setGraphData(param);
+  };
+
   const context = {
     setSideNavCollapsed: setSideNavCollapsedFunc,
     sideNavCollapsed: sideNaveCollapse,
@@ -93,6 +112,8 @@ export function ActionContextProvider(props?: any) {
     setShowMobile: SetMobivalFunc,
     search: search,
     setSearch: setSearchFunc,
+    graphData: graphData,
+    setGraphData: setgraphDataFunc,
   };
 
   return (
