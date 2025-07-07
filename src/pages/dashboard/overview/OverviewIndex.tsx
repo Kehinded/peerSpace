@@ -15,7 +15,6 @@ import {
   defaultNames,
   generateSparseLinks,
   generateTempNodes,
-  userName,
 } from "../../../utils/NodeData";
 import ActionContext from "../../../context/ActionContext";
 import { scrollToTopVH } from "../../../helper/helper";
