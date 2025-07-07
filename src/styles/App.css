@@ -3,4 +3,7 @@
   height: 100vh;
   background-color: #ffffff;
   overflow-y: scroll;
+}
+.app::-webkit-scrollbar {
+  display: none;
 }/*# sourceMappingURL=App.css.map */
