@@ -1005,7 +1005,8 @@ const PeopleGraph = forwardRef<PeopleGraphHandle, Props>(
             }}
             onNodeClick={(node) => {
               const clicked = node as GraphNode;
-              if (!highlightNodes.has(clicked.id)) return;
+              if (highlightNodes.size > 0 && !highlightNodes.has(clicked.id))
+                return;
               focusOnSingleNode(node as GraphNode);
             }}
             nodeRelSize={nodeSize}
