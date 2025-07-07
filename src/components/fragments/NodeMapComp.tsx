@@ -115,7 +115,10 @@ const PeopleGraph = forwardRef<PeopleGraphHandle, Props>(
     const { width } = useWindowSize();
     const size = useWindowSize();
     const minZoom = 0.5;
-    const nodeSize = Number(size?.width) > 700 ? 25 : 25;
+    const nodeSize = Number(size?.width) > 700 ? 25 : 20;
+    const focusedScale = Number(size?.width) > 700 ? 1.8 : 1.4;
+    const highlightScale = Number(size?.width) > 700 ? 1.4 : 1.2;
+    const dimmedScale = 0.8;
     const defaultLinkColor = "#b4c4ec";
     const animateValue = (
       _p0: string, //   key: string,
@@ -501,10 +504,10 @@ const PeopleGraph = forwardRef<PeopleGraphHandle, Props>(
           const isFocused = connectedIds.has(n.id);
           const targetOpacity = isFocused ? 1 : 0.1;
           const targetRadius = isFocused
-            ? n.id === clicked.id
-              ? nodeSize * 2.2
-              : nodeSize * 1.4
-            : nodeSize * 0.8;
+            ? nodeSize * focusedScale
+            : highlightNodes.has(n.id)
+            ? nodeSize * highlightScale
+            : nodeSize * dimmedScale;
 
           animateValue(
             `r-${n.id}`,
