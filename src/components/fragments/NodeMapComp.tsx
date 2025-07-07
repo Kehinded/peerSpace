@@ -227,7 +227,7 @@ const PeopleGraph = forwardRef<PeopleGraphHandle, Props>(
         const discRadius = 600;
         unlinkedNodes.forEach((node) => {
           const angle = Math.random() * 2 * Math.PI;
-          const radius = Math.sqrt(Math.random()) * discRadius; 
+          const radius = Math.sqrt(Math.random()) * discRadius;
           const x = centerX + radius * Math.cos(angle);
           const y = centerY + radius * Math.sin(angle);
           node.fx = x;
@@ -491,6 +491,7 @@ const PeopleGraph = forwardRef<PeopleGraphHandle, Props>(
         );
       });
     }, [highlightNodes, highlightLinks, focusedNodeIds]);
+
     useEffect(() => {
       if (!showArrayConnections || !showOnlyForNames.length) return;
 
@@ -640,6 +641,25 @@ const PeopleGraph = forwardRef<PeopleGraphHandle, Props>(
 
       return () => {
         canvas.removeEventListener("wheel", handleWheel);
+      };
+    }, []);
+
+    useEffect(() => {
+      const fg = fgRef.current;
+      if (!fg) return;
+
+      const handleVisibilityChange = () => {
+        if (!document.hidden) {
+          fg.d3ReheatSimulation();
+        }
+      };
+
+      document.addEventListener("visibilitychange", handleVisibilityChange);
+      return () => {
+        document.removeEventListener(
+          "visibilitychange",
+          handleVisibilityChange
+        );
       };
     }, []);
 
