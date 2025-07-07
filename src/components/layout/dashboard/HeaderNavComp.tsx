@@ -75,6 +75,7 @@ const HeaderNavComp = () => {
                   onChange={() => {
                     actionCtx?.setConnections &&
                       actionCtx?.setConnections(chi?.key_name, !chi?.value);
+                    actionCtx?.setSearch && actionCtx?.setSearch("");
                   }}
                   checked={chi?.value}
                   color={`black-light`}
