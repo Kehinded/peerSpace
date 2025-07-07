@@ -684,7 +684,7 @@ const PeopleGraph = forwardRef<PeopleGraphHandle, Props>(
         >
           <ForceGraph2D
             nodePointerAreaPaint={renderPointerPaint}
-            // onBackgroundClick={resetGraphToDefault}
+            onBackgroundClick={resetGraphToDefault}
             ref={fgRef}
             graphData={graphData}
             backgroundColor="transparent"
